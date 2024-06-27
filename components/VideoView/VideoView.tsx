@@ -31,13 +31,17 @@ export default function VideoView({
   const avatarRef = createRef<HTMLCanvasElement>();
   const recordButtonRef = useRef(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const modalProps = {
-    isOpen,
-    onOpenChange,
-  };
+  const [isRecording, setIsRecording] = useState(false);
+  const [videoURL, setVideoURL] = useState<string>("");
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [stream, setStream] = useState<MediaStream>();
+  const [newBlob, setNewBlob] = useState<Blob>();
+  const modalProps = {
+    isOpen,
+    onOpenChange,
+    videoURL,
+  };
   useEffect(() => {
     const setup = async () => {
       const filesetResolver = await FilesetResolver.forVisionTasks(
@@ -81,6 +85,13 @@ export default function VideoView({
     };
   }, []);
 
+  useEffect(() => {
+    const blob = new Blob(recordedBlobs, { type: "video/webm" });
+    const url = window.URL.createObjectURL(blob);
+    setVideoURL(url);
+    console.log("url", url);
+  }, [newBlob]);
+
   const predict = async () => {
     let nowInMs = Date.now();
     if (faceLandmarker && lastVideoTime !== video.currentTime) {
@@ -117,8 +128,6 @@ export default function VideoView({
     console.log("Recorder stopped: ", event);
   };
 
-  const [isRecording, setIsRecording] = useState(false);
-
   const toggleRecording = () => {
     if (isRecording) {
       stopRecording();
@@ -129,7 +138,7 @@ export default function VideoView({
   };
 
   const startRecording = () => {
-    let options = { mimeType: "video/webm", videoBitsPerSecond: 2500000 };
+    let options = { mimeType: "video/webm", videoBitsPerSecond: 5000000 };
     setRecordedBlobs([]);
     try {
       if (stream === undefined) {
@@ -164,9 +173,22 @@ export default function VideoView({
     }
     mediaRecorder.stop();
     console.log("Recorded Blobs: ", recordedBlobs);
-    const blob = new Blob(recordedBlobs, { type: "video/mp4" });
-    const url = window.URL.createObjectURL(blob);
+    const blob = new Blob(recordedBlobs, { type: "video/webm" });
+    setNewBlob(blob);
+    // const url = window.URL.createObjectURL(blob);
+    const formData = new FormData();
+    formData.append("file", blob, "video.webm");
+
+    fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+
     console.log("url", url);
+
     // onOpen();
     // setIsStopped(true);
     // videoRef.current.controls = true;
@@ -206,8 +228,10 @@ export default function VideoView({
         <Canvas
           ref={avatarRef}
           style={{
-            aspectRatio: 16 / 9,
+            // aspectRatio: 16 / 9,
             transform: "scaleX(-1)",
+            height: "400px",
+            width: "400px",
           }}
           camera={{ fov: 14 }}
           shadows
