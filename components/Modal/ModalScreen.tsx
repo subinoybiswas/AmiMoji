@@ -5,7 +5,7 @@ import {
   ModalBody,
   Button,
 } from "@nextui-org/react";
-import { generate, count } from "random-words";
+import { generate } from "random-words";
 export default function ModalScreen({
   modalProps,
 }: {
