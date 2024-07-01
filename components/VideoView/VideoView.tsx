@@ -281,9 +281,9 @@ export default function VideoView({
               isStopped={!isRecording}
             />
           </button>
-          <Button onPress={onOpen} color="secondary">
+          {/* <Button onPress={onOpen} color="secondary">
             Open Modal
-          </Button>
+          </Button> */}
           <ModalScreen modalProps={modalProps} />
         </div>
       </div>

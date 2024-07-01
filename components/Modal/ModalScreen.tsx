@@ -3,10 +3,9 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
 } from "@nextui-org/react";
-
+import { generate, count } from "random-words";
 export default function ModalScreen({
   modalProps,
 }: {
@@ -17,13 +16,22 @@ export default function ModalScreen({
   };
 }) {
   const { isOpen, onOpenChange, videoURL } = modalProps;
-  const handleDownload = () => {
-    const link = document.createElement("a");
-    link.href = videoURL;
-    link.download = "video.webm"; // You can set the file name here
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async () => {
+    try {
+      // Fetch the video file as a blob
+      const response = await fetch(videoURL);
+      const blob = await response.blob();
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `amimoji_${generate({ exactly: 2, join: "_" })}`;
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading video:", error);
+    }
   };
   return (
     <Modal
@@ -48,7 +56,7 @@ export default function ModalScreen({
             </ModalHeader>
             <ModalBody>
               {videoURL && videoURL.length > 0 && (
-                  <>
+                <>
                   <video autoPlay className="" src={videoURL}></video>
                   <Button onClick={handleDownload}>Download</Button>
                 </>
