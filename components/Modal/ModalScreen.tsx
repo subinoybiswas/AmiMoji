@@ -49,7 +49,7 @@ export default function ModalScreen({
               
             </ModalBody>
             <ModalFooter>
-              <Button color="foreground" variant="light" onPress={onClose}>
+              <Button color="default" variant="light" onPress={onClose}>
                 Close
               </Button>
               <Button
