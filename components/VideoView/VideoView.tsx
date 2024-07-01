@@ -15,6 +15,7 @@ import {
 import options from "@/app/helpers/faceLandMarks";
 import { Preload, Loader } from "@react-three/drei";
 import ModalScreen from "../Modal/ModalScreen";
+import ModelModalScreen from "../Modal/ModelModalScreen";
 
 export default function VideoView({
   displayToggle,
@@ -27,11 +28,11 @@ export default function VideoView({
   const [blendshapes, setBlendshapes] = useState<Category[] | null>(null);
   const [rotation, setRotation] = useState<Euler | null>(null);
   const [url, setUrl] = useState<string>(
-    "https://models.readyplayer.me/6460d95f9ae10f45bffb2864.glb?morphTargets=ARKit&textureAtlas=1024"
+    "https://models.readyplayer.me/65e5840c374014375e404085.glb?morphTargets=ARKit"
   );
   const avatarRef = createRef<HTMLCanvasElement>();
   const recordButtonRef = useRef(null);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
   const [isRecording, setIsRecording] = useState(false);
   const [videoURL, setVideoURL] = useState<string>("");
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
@@ -43,6 +44,8 @@ export default function VideoView({
     isOpen,
     onOpenChange,
     videoURL,
+    setUrl,
+    onClose
   };
 
   useEffect(() => {
@@ -217,8 +220,6 @@ export default function VideoView({
       className="flex flex-col justify-center content-center items-center h-full w-full  rounded-xl shadow-2xl"
       style={{ aspectRatio: 16 / 9, transition: "all 0.5s ease-in-out" }}
     >
-      <Loader />
-
       <video
         style={{
           height: "100%",

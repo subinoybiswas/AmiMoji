@@ -1,9 +1,24 @@
 "use client";
 import VideoView from "@/components/VideoView/VideoView";
-
+import Image from "next/image";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles } from "lucide-react";
+import { Button } from "@nextui-org/react";
 export default function Home() {
   const displayToggle = true;
+  const [isVisible, setIsVisible] = useState(false);
 
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const variants = {
+    open: { opacity: 1, x: 0 },
+    closed: { opacity: 0, x: "-100%" },
+  };
+
+  const ImageList = ["/edit.png", "/edit.png", "/edit.png"];
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-[url('/bg.svg')] bg-cover ">
       {/* {Background taken from https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/} */}
@@ -38,11 +53,42 @@ export default function Home() {
     Learn More
     </a>
     </div>
-        </div>
-        </section> */}
-
+    </div>
+    </section> */}
         <div className="flex flex-col items-center justify-between  min-h-screen">
-          <div className="fixed bg-slate-600/30 w-3/4 backdrop-blur-lg h-3/4 rounded-xl p-5">
+          <div className="fixed bg-slate-600/30 w-3/4 backdrop-blur-lg h-3/4 rounded-xl p-5 items-center">
+            <motion.nav
+              className=" fixed flex flex-col bg-slate-600/30 w-1/4 scrolltarget backdrop-blur-lg h-[90%] rounded-xl p-3 gap-2 overflow-y-scroll"
+              animate={isVisible ? "open" : "closed"}
+              variants={variants}
+            >
+              {ImageList.map((image, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="bg-slate-600/30 w-full backdrop-blur-lg rounded-xl cursor-pointer hover:border-2 hover:border-blue-500"
+                  >
+                    <Image
+                      className="rounded-xl"
+                      src={image}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        aspectRatio: "16/9",
+                        objectFit: "cover",
+                      }}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      alt="Image"
+                    />
+                  </div>
+                );
+              })}
+            </motion.nav>
+            <Button onClick={toggleVisibility} className="top-5 m-2 fixed" isIconOnly>
+              <Sparkles size={16} strokeWidth={3} />
+            </Button>
             <VideoView displayToggle={displayToggle} />
           </div>
         </div>
