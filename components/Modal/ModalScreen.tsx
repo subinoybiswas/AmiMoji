@@ -17,6 +17,14 @@ export default function ModalScreen({
   };
 }) {
   const { isOpen, onOpenChange, videoURL } = modalProps;
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = videoURL;
+    link.download = "video.webm"; // You can set the file name here
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <Modal
       backdrop="opaque"
@@ -36,29 +44,16 @@ export default function ModalScreen({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Modal Title
+              Configure AmiMoji
             </ModalHeader>
             <ModalBody>
-              {videoURL && (
-                <video
-                  controls
-                  className="absolute top-0 left-0 w-full h-full"
-                  src={videoURL}
-                ></video>
+              {videoURL && videoURL.length > 0 && (
+                  <>
+                  <video autoPlay className="" src={videoURL}></video>
+                  <Button onClick={handleDownload}>Download</Button>
+                </>
               )}
-              
             </ModalBody>
-            <ModalFooter>
-              <Button color="default" variant="light" onPress={onClose}>
-                Close
-              </Button>
-              <Button
-                className="bg-[#6f4ef2] shadow-lg shadow-indigo-500/20"
-                onPress={onClose}
-              >
-                Action
-              </Button>
-            </ModalFooter>
           </>
         )}
       </ModalContent>

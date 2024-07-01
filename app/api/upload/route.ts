@@ -3,7 +3,6 @@ import fs from "fs";
 
 import { generateRandomFilename } from "@/app/helpers/generateFileName";
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { firebaseConfig } from "@/app/secrets/firebase";
@@ -34,10 +33,12 @@ export async function POST(req: Request) {
     const snapshot = await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(snapshot.ref);
 
-    return Response.json({
-      message: "File uploaded successfully",
-      url: downloadURL,
-    });
+    return Response.json(
+      {
+        url: downloadURL,
+      },
+      { status: 200 }
+    );
   } catch (err) {
     console.error("Error saving file:", err);
     return Response.json({ message: "Failed to save file" }, { status: 500 });

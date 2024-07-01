@@ -20,8 +20,6 @@ export default function VideoView({
 }: {
   displayToggle: boolean;
 }) {
-
-
   let video: HTMLVideoElement;
   let faceLandmarker: FaceLandmarker | null = null;
   let lastVideoTime = -1;
@@ -44,7 +42,6 @@ export default function VideoView({
     onOpenChange,
     videoURL,
   };
-
 
   useEffect(() => {
     const setup = async () => {
@@ -95,7 +92,6 @@ export default function VideoView({
     setVideoURL(url);
     console.log("url", url);
   }, [newBlob]);
-
 
   const predict = async () => {
     let nowInMs = Date.now();
@@ -171,7 +167,7 @@ export default function VideoView({
     console.log("MediaRecorder started", mediaRecorder);
   };
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     if (mediaRecorder === undefined) {
       console.log("MediaRecorder is undefined");
       return;
@@ -184,15 +180,18 @@ export default function VideoView({
     const formData = new FormData();
     formData.append("file", blob, "video.webm");
 
-    fetch("/api/upload", {
+    const resp = await fetch("/api/upload", {
       method: "POST",
       body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error("Error:", error));
+    });
 
-    console.log("url", url);
+    const data = await resp.json();
+    console.log("data", data, resp.status);
+    if (resp.status === 200) {
+      setVideoURL(data.url);
+      onOpen()
+
+    }
   };
   const defaultOptions = {
     loop: true,
