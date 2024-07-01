@@ -1,19 +1,16 @@
 import { useGLTF } from "@react-three/drei";
-import {
-  Category,
-  FaceLandmarker,
-  FaceLandmarkerOptions,
-  FilesetResolver,
-} from "@mediapipe/tasks-vision";
+import { Category } from "@mediapipe/tasks-vision";
 import { Euler } from "three";
 import { useFrame, useGraph } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
+
 export interface AvatarProps {
   url: string;
   blendshapes: Category[] | undefined; // Assuming blendshapes is an array of objects
   rotation: Euler | undefined;
   // headMesh: any[] | undefined;
 }
+
 export function Avatar({ url, blendshapes, rotation }: AvatarProps) {
   const { scene } = useGLTF(url);
   const { nodes } = useGraph(scene);

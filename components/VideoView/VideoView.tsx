@@ -1,9 +1,9 @@
 "use client";
-import React, { use, useEffect, useRef, useState, createRef } from "react";
+import React, { useEffect, useRef, useState, createRef } from "react";
 import { Color, Euler, Matrix4 } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Avatar } from "./helper/Avatar";
-import { Button, useDisclosure, Modal } from "@nextui-org/react";
+import { Button, useDisclosure } from "@nextui-org/react";
 import Lottie from "react-lottie";
 import animationData from "@/app/static/recordingani.json";
 import {
@@ -20,6 +20,8 @@ export default function VideoView({
 }: {
   displayToggle: boolean;
 }) {
+
+
   let video: HTMLVideoElement;
   let faceLandmarker: FaceLandmarker | null = null;
   let lastVideoTime = -1;
@@ -42,6 +44,8 @@ export default function VideoView({
     onOpenChange,
     videoURL,
   };
+
+
   useEffect(() => {
     const setup = async () => {
       const filesetResolver = await FilesetResolver.forVisionTasks(
@@ -91,6 +95,7 @@ export default function VideoView({
     setVideoURL(url);
     console.log("url", url);
   }, [newBlob]);
+
 
   const predict = async () => {
     let nowInMs = Date.now();
@@ -175,7 +180,7 @@ export default function VideoView({
     console.log("Recorded Blobs: ", recordedBlobs);
     const blob = new Blob(recordedBlobs, { type: "video/webm" });
     setNewBlob(blob);
-    // const url = window.URL.createObjectURL(blob);
+
     const formData = new FormData();
     formData.append("file", blob, "video.webm");
 
@@ -188,10 +193,6 @@ export default function VideoView({
       .catch((error) => console.error("Error:", error));
 
     console.log("url", url);
-
-    // onOpen();
-    // setIsStopped(true);
-    // videoRef.current.controls = true;
   };
   const defaultOptions = {
     loop: true,
@@ -263,9 +264,6 @@ export default function VideoView({
       ) : (
         <></>
       )}
-      {/* <div className="fixed top-0 left-0 p-6">
-        <Lottie options={defaultOptions} height={40} width={40} />
-      </div> */}
       <div className="bottom-0 fixed p-6">
         <div className="grid grid-flow-col gap-1 min-w-1/4   self-center place-items-center bg-slate-400/50 p-2 rounded-3xl ">
           <button ref={recordButtonRef} onClick={toggleRecording}>
@@ -280,9 +278,6 @@ export default function VideoView({
             Open Modal
           </Button>
           <ModalScreen modalProps={modalProps} />
-          {/* <button ref={recordButtonRef} onClick={toggleRecording}>
-            Stop
-          </button> */}
         </div>
       </div>
     </div>
