@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { Avatar } from "./helper/Avatar";
 import { Button, useDisclosure } from "@nextui-org/react";
 import Lottie from "react-lottie";
+import { Spinner } from "@nextui-org/spinner";
 import animationData from "@/app/static/recordingani.json";
 import {
   Category,
@@ -37,6 +38,7 @@ export default function VideoView({
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [stream, setStream] = useState<MediaStream>();
   const [newBlob, setNewBlob] = useState<Blob>();
+  const [isLoading, setIsLoading] = useState(false);
   const modalProps = {
     isOpen,
     onOpenChange,
@@ -94,7 +96,6 @@ export default function VideoView({
     }
   }, [mediaRecorder]);
 
-  
   useEffect(() => {
     const blob = new Blob(recordedBlobs, { type: "video/webm" });
     const url = window.URL.createObjectURL(blob);
@@ -188,7 +189,7 @@ export default function VideoView({
 
     const formData = new FormData();
     formData.append("file", blob, "video.webm");
-
+    setIsLoading(true);
     const resp = await fetch("/api/upload", {
       method: "POST",
       body: formData,
@@ -198,6 +199,7 @@ export default function VideoView({
     console.log("data", data, resp.status);
     if (resp.status === 200) {
       setVideoURL(data.url);
+      setIsLoading(false);
       onOpen();
     }
   };
@@ -232,6 +234,7 @@ export default function VideoView({
         id="vid"
         autoPlay
       ></video>
+      {isLoading && <Spinner size="lg" className="absoulte top-[50%] z-[20]" />}
       {displayToggle ? (
         <Canvas
           ref={avatarRef}
