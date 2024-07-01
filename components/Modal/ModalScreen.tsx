@@ -4,12 +4,14 @@ import {
   ModalHeader,
   ModalBody,
   Button,
+  Spinner,
 } from "@nextui-org/react";
 import { Tabs, Tab, Card } from "@nextui-org/react";
 import { downloadHelper } from "./helpers/downloadHelper";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { transcode } from "./helpers/ffmpegTranscode";
+import { load } from "./helpers/ffmpegLoad";
 
 export default function ModalScreen({
   modalProps,
@@ -22,6 +24,7 @@ export default function ModalScreen({
 }) {
   const ffmpegRef = useRef(new FFmpeg());
   const { isOpen, onOpenChange, videoURL } = modalProps;
+  const [loading, setLoading] = useState(false);
 
   const handleDownload = async (mode: string) => {
     if (mode === "video") {
@@ -36,7 +39,7 @@ export default function ModalScreen({
       }
     } else if (mode === "gif") {
       try {
-        const url = await transcode(videoURL, ffmpegRef);
+        const url = await transcode(videoURL, ffmpegRef, setLoading);
         downloadHelper(url, "gif");
       } catch (error) {
         console.error("Error converting to GIF:", error);
@@ -80,6 +83,7 @@ export default function ModalScreen({
                     <Tab key="gif" title="GIF">
                       <Card>
                         <Button onClick={() => handleDownload("gif")}>
+                          {loading ? <Spinner size="sm" className="" /> : <></>}
                           Download GIF
                         </Button>
                       </Card>
