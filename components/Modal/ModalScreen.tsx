@@ -6,11 +6,11 @@ import {
   Button,
 } from "@nextui-org/react";
 import { Tabs, Tab, Card } from "@nextui-org/react";
-import { generate } from "random-words";
+import { downloadHelper } from "./helpers/downloadHelper";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { toBlobURL, fetchFile } from "@ffmpeg/util";
-import { MutableRefObject, useRef } from "react";
+import { useRef } from "react";
 import { transcode } from "./helpers/ffmpegTranscode";
+
 export default function ModalScreen({
   modalProps,
 }: {
@@ -29,34 +29,15 @@ export default function ModalScreen({
         // Fetch the video file as a blob
         const response = await fetch(videoURL);
         const blob = await response.blob();
-
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `amimoji_video_${generate({
-          exactly: 2,
-          join: "_",
-        })}.mp4`;
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const url = URL.createObjectURL(blob);
+        downloadHelper(url, "mp4");
       } catch (error) {
         console.error("Error downloading video:", error);
       }
     } else if (mode === "gif") {
       try {
         const url = await transcode(videoURL, ffmpegRef);
-
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `amimoji_gif_${generate({
-          exactly: 2,
-          join: "_",
-        })}.gif`;
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        downloadHelper(url, "gif");
       } catch (error) {
         console.error("Error converting to GIF:", error);
       }
