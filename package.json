@@ -16,6 +16,7 @@
     "@readyplayerme/react-avatar-creator": "^0.5.0",
     "firebase": "^10.12.2",
     "framer-motion": "^11.2.12",
+    "lucide-react": "^0.399.0",
     "next": "14.2.4",
     "next-themes": "^0.3.0",
     "prop-types": "^15.8.1",
