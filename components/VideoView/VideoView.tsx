@@ -85,7 +85,16 @@ export default function VideoView({
       }
     };
   }, []);
+  useEffect(() => {
+    if (mediaRecorder) {
+      mediaRecorder.onstop = handleStop;
+      mediaRecorder.ondataavailable = handleDataAvailable;
+      mediaRecorder.start(100); // collect 100ms of data
+      console.log("MediaRecorder started", mediaRecorder);
+    }
+  }, [mediaRecorder]);
 
+  
   useEffect(() => {
     const blob = new Blob(recordedBlobs, { type: "video/webm" });
     const url = window.URL.createObjectURL(blob);
@@ -189,8 +198,7 @@ export default function VideoView({
     console.log("data", data, resp.status);
     if (resp.status === 200) {
       setVideoURL(data.url);
-      onOpen()
-
+      onOpen();
     }
   };
   const defaultOptions = {
