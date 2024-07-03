@@ -26,13 +26,7 @@ To read more about using these font, please visit the Next.js documentation:
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { JSX, SVGProps } from "react";
 
@@ -55,8 +49,9 @@ const getCommits = async () => {
     return response.json();
   }
 };
+export const dynamic = "force-dynamic";
 
-export async function Tracker() {
+export default async function Tracker() {
   const issues = await getIssues();
   const commits = await getCommits();
   console.log(commits);
