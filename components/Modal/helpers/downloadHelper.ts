@@ -1,5 +1,6 @@
 import { generate } from "random-words";
 export const downloadHelper = async (url: string, filetype: string) => {
+  if (typeof window !== "undefined" && typeof document !== "undefined") {
     try {
       const link = document.createElement("a");
       link.href = url;
@@ -14,4 +15,5 @@ export const downloadHelper = async (url: string, filetype: string) => {
     } catch (error: any) {
       throw new Error("Error downloading video:", error);
     }
-  };
+  }
+};

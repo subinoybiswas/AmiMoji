@@ -41,6 +41,7 @@ export default function VideoView({
   const [newBlob, setNewBlob] = useState<Blob>();
   const [isLoading, setIsLoading] = useState(false);
   const [position, setPosition] = useState<number[]>([0, -1.75, 3]);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const modalProps = {
     isOpen,
     onOpenChange,
@@ -54,27 +55,31 @@ export default function VideoView({
       const filesetResolver = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
       );
+
       faceLandmarker = await FaceLandmarker.createFromOptions(
         filesetResolver,
         options
       );
 
-      video = document.getElementById("vid") as HTMLVideoElement;
-      navigator.mediaDevices
-        .getUserMedia({
-          video: { width: 1280, height: 720 },
-          audio: false,
-        })
-        .then(function (stream) {
-          stream.addEventListener("loadeddata", () => {
-            console.log("loadeddata");
-          });
-          video.srcObject = stream;
-          video.addEventListener("loadeddata", predict);
-          video.style.transform = `scaleX(-1)`;
-        });
-    };
+      if (videoRef.current) {
+        const video = videoRef.current;
+     
+        navigator.mediaDevices
+          .getUserMedia({
+            video: { width: 1280, height: 720 },
+            audio: false,
+          })
+          .then((stream) => {
+            stream.addEventListener("loadeddata", () => {
+              console.log("loadeddata");
+            });
 
+            video.srcObject = stream;
+            video.addEventListener("loadeddata", predict);
+            video.style.transform = "scaleX(-1)";
+          });
+      }
+    };
     setup();
 
     const canvas = avatarRef.current;
@@ -110,27 +115,29 @@ export default function VideoView({
 
   const predict = async () => {
     let nowInMs = Date.now();
-    if (faceLandmarker && lastVideoTime !== video.currentTime) {
-      lastVideoTime = video.currentTime;
-      const faceLandmarkerResult = faceLandmarker.detectForVideo(
-        video,
-        nowInMs
-      );
-
-      if (
-        faceLandmarkerResult.faceBlendshapes &&
-        faceLandmarkerResult.faceBlendshapes.length > 0 &&
-        faceLandmarkerResult.faceBlendshapes[0].categories
-      ) {
-        setBlendshapes(faceLandmarkerResult.faceBlendshapes[0].categories);
-
-        const matrix = new Matrix4().fromArray(
-          faceLandmarkerResult.facialTransformationMatrixes![0].data
+    const video = videoRef.current;
+    if (video) {
+      if (faceLandmarker && lastVideoTime !== video.currentTime) {
+        lastVideoTime = video.currentTime;
+        const faceLandmarkerResult = faceLandmarker.detectForVideo(
+          video,
+          nowInMs
         );
-        setRotation(new Euler().setFromRotationMatrix(matrix));
+
+        if (
+          faceLandmarkerResult.faceBlendshapes &&
+          faceLandmarkerResult.faceBlendshapes.length > 0 &&
+          faceLandmarkerResult.faceBlendshapes[0].categories
+        ) {
+          setBlendshapes(faceLandmarkerResult.faceBlendshapes[0].categories);
+
+          const matrix = new Matrix4().fromArray(
+            faceLandmarkerResult.facialTransformationMatrixes![0].data
+          );
+          setRotation(new Euler().setFromRotationMatrix(matrix));
+        }
       }
     }
-
     window.requestAnimationFrame(predict);
   };
 
@@ -215,6 +222,7 @@ export default function VideoView({
       style={{ aspectRatio: 16 / 9, transition: "all 0.5s ease-in-out" }}
     >
       <video
+        ref={videoRef}
         style={{
           height: "100%",
           width: "100%",
