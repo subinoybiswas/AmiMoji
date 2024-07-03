@@ -10,6 +10,7 @@ import { CustomChar } from "./CustomCharBtn";
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import dynamic from "next/dynamic";
+import toast, { Toaster } from "react-hot-toast";
 const VideoView = dynamic(() => import("@/components/VideoView/VideoView"), {
   ssr: false,
 });
@@ -49,6 +50,7 @@ export default function Home() {
     onOpenChange,
     setUrl,
     onClose,
+    toast,
   };
   return (
     <NextUIProvider>
@@ -146,6 +148,18 @@ export default function Home() {
               <ModelModalScreen modalProps={modalProps} />
             </div>
           </div>
+
+          <Toaster
+            toastOptions={{
+              style: {
+                padding: "12px",
+                color: "#FFFFFF",
+                borderRadius: "12px",
+                backgroundColor: "rgba(31, 41, 55, 0.8)", // 20% transparent background
+                backdropFilter: "blur(10px)",
+              },
+            }}
+          />
         </main>
       </NextThemesProvider>
     </NextUIProvider>

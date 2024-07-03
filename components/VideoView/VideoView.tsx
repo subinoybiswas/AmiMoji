@@ -17,6 +17,7 @@ import ModalScreen from "../Modal/ModalScreen";
 import { Controls } from "./helper/Controls";
 import { RecordingButton } from "../RecordingButton/RecordingButton";
 import { useProgress } from "@react-three/drei";
+import toast from "react-hot-toast";
 export default function VideoView({
   displayToggle,
   url,
@@ -48,6 +49,7 @@ export default function VideoView({
     videoURL,
     setUrl,
     onClose,
+    toast,
   };
 
   useEffect(() => {
@@ -105,7 +107,6 @@ export default function VideoView({
       console.log("MediaRecorder started", mediaRecorder);
     }
   }, [mediaRecorder]);
-
 
   const predict = async () => {
     let nowInMs = Date.now();
