@@ -117,7 +117,7 @@ export default function Home() {
                 <ModelModalScreen modalProps={modalProps} />
               </div>
             ) : (
-              <section className="bg-gray-900/20 backdrop-blur-lg text-white h-[80vh] flex items-center content-center justify-center rounded-3xl">
+              <section className="bg-gray-900/20  text-white h-[80vh] flex items-center content-center justify-center rounded-3xl">
                 <div className="mx-auto max-w-3xl text-center">
                   <h1 className="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl">
                     Bring Your Imagination
