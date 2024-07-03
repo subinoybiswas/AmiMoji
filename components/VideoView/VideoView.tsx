@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useRef, useState, createRef } from "react";
+import React, { useEffect, useRef, useState, createRef, Suspense } from "react";
 import { Color, Euler, Matrix4 } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Avatar } from "./helper/Avatar";
 import { Button, useDisclosure } from "@nextui-org/react";
-import Lottie from "react-lottie";
+import { Loading } from "./helper/Loading";
 import { Spinner } from "@nextui-org/spinner";
 import {
   Category,
@@ -16,7 +16,7 @@ import { Preload, Loader } from "@react-three/drei";
 import ModalScreen from "../Modal/ModalScreen";
 import { Controls } from "./helper/Controls";
 import { RecordingButton } from "../RecordingButton/RecordingButton";
-
+import {  useProgress } from "@react-three/drei";
 export default function VideoView({
   displayToggle,
   url,
@@ -91,7 +91,7 @@ export default function VideoView({
       }
     };
   }, []);
-  
+
   useEffect(() => {
     if (mediaRecorder) {
       mediaRecorder.onstop = handleStop;
@@ -152,7 +152,7 @@ export default function VideoView({
     }
     setIsRecording(!isRecording);
   };
-
+  const { progress } = useProgress();
   const startRecording = () => {
     let options = { mimeType: "video/webm", videoBitsPerSecond: 5000000 };
     setRecordedBlobs([]);
@@ -221,7 +221,6 @@ export default function VideoView({
           objectFit: "cover",
           borderRadius: "1.5rem",
           display: displayToggle ? "none" : "",
-          transform: "scaleX(-1)",
           aspectRatio: 16 / 9,
           position: "relative",
           zIndex: 2,
@@ -230,45 +229,47 @@ export default function VideoView({
         autoPlay
       ></video>
       {isLoading && <Spinner size="lg" className="absoulte top-[50%] z-[20]" />}
-      {displayToggle ? (
-        <Canvas
-          ref={avatarRef}
-          style={{
-            // aspectRatio: 16 / 9,
-            transform: "scaleX(-1)",
-            height: "400px",
-            width: "400px",
-          }}
-          camera={{ fov: 14 }}
-          shadows
-        >
-          <Preload all />
-          <ambientLight intensity={0.8} />
-          <pointLight
-            position={[10, 10, 10]}
-            color={new Color(1, 1, 0)}
-            intensity={0.5}
-            castShadow
-          />
-          <pointLight
-            position={[-10, 0, 10]}
-            color={new Color(1, 0, 0)}
-            intensity={0.5}
-            castShadow
-          />
-          <pointLight position={[0, 0, 10]} intensity={0.5} castShadow />
-          {blendshapes && rotation && (
-            <Avatar
-              url={url}
-              blendshapes={blendshapes}
-              rotation={rotation}
-              position={position}
-              // headMesh={headMesh}
+      {displayToggle && (
+        <Suspense fallback={<div>Loading..</div>}>
+          <Canvas
+            ref={avatarRef}
+            style={{
+              // aspectRatio: 16 / 9,
+
+              height: "400px",
+              width: "400px",
+            }}
+            camera={{ fov: 14 }}
+            shadows
+          >
+            <Preload all />
+            <ambientLight intensity={0.8} />
+            <pointLight
+              position={[10, 10, 10]}
+              color={new Color(1, 1, 0)}
+              intensity={0.5}
+              castShadow
             />
-          )}
-        </Canvas>
-      ) : (
-        <></>
+            <pointLight
+              position={[-10, 0, 10]}
+              color={new Color(1, 0, 0)}
+              intensity={0.5}
+              castShadow
+            />
+            <pointLight position={[0, 0, 10]} intensity={0.5} castShadow />
+            <Suspense fallback={<Loading progress={progress} />}>
+              {blendshapes && rotation && (
+                <Avatar
+                  url={url}
+                  blendshapes={blendshapes}
+                  rotation={rotation}
+                  position={position}
+                  // headMesh={headMesh}
+                />
+              )}
+            </Suspense>
+          </Canvas>
+        </Suspense>
       )}
       <Controls setPosition={setPosition} />
 
