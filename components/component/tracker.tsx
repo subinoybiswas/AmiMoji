@@ -32,6 +32,11 @@ import { JSX, SVGProps } from "react";
 
 const getIssues = async () => {
   const response = await fetch(`${process.env.SERVER_URL}/api/github/issues`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
     next: { revalidate: 60 },
   });
   if (response.ok) {
@@ -42,6 +47,11 @@ const getIssues = async () => {
 
 const getCommits = async () => {
   const response = await fetch(`${process.env.SERVER_URL}/api/github/commits`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
     next: { revalidate: 60 },
   });
   if (response.ok) {

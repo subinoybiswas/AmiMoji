@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/rest";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
     const commits = await octokit.paginate(octokit.repos.listCommits, {
