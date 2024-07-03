@@ -12,6 +12,7 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { useRef, useState } from "react";
 import { transcode } from "./helpers/ffmpegTranscode";
 import { load } from "./helpers/ffmpegLoad";
+import toast from "react-hot-toast";
 
 export default function ModalScreen({
   modalProps,
@@ -20,9 +21,9 @@ export default function ModalScreen({
     isOpen: boolean;
     onOpenChange: () => void;
     videoURL: string;
+    toast: (message: string) => void;
   };
 }) {
-  
   const ffmpegRef = useRef(new FFmpeg());
   const { isOpen, onOpenChange, videoURL } = modalProps;
   const [loading, setLoading] = useState(false);
@@ -34,14 +35,35 @@ export default function ModalScreen({
         const response = await fetch(videoURL);
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        downloadHelper(url, "mp4", linkRef);
+        const downloadPromise = downloadHelper(url, "mp4", linkRef);
+        toast.promise(downloadPromise, {
+          loading: "Downloading video",
+          success: "Downloaded video successfully",
+          error: "Error when downloading video",
+        });
       } catch (error) {
         console.error("Error downloading video:", error);
       }
     } else if (mode === "gif") {
       try {
-        const url = await transcode(videoURL, ffmpegRef, setLoading);
-        downloadHelper(url, "gif", linkRef);
+        const transcodePromise: Promise<string> = transcode(
+          videoURL,
+          ffmpegRef,
+          setLoading
+        );
+        toast.promise(transcodePromise, {
+          loading: "Converting to GIF",
+          success: "Successfully converted to GIF",
+          error: "Error converting to GIF",
+        });
+        const url = await transcodePromise;
+
+        const downloadPromise = downloadHelper(url, "gif", linkRef);
+        toast.promise(downloadPromise, {
+          loading: "Downloading GIF",
+          success: "Downloaded GIF successfully",
+          error: "Error when downloading GIF",
+        });
       } catch (error) {
         console.error("Error converting to GIF:", error);
       }

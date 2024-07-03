@@ -4,6 +4,8 @@ import {
   AvatarExportedEvent,
 } from "@readyplayerme/react-avatar-creator";
 import { Modal, ModalContent } from "@nextui-org/react";
+import toast from "react-hot-toast";
+
 export default function ModelModalScreen({
   modalProps,
 }: {
@@ -12,11 +14,14 @@ export default function ModelModalScreen({
     onOpenChange: () => void;
     setUrl: (url: string) => void;
     onClose: () => void;
+    toast: (message: string) => void;
   };
 }) {
   const { isOpen, onOpenChange, setUrl, onClose } = modalProps;
   const handleOnAvatarExported = (event: AvatarExportedEvent) => {
     setUrl(event.data.url + "?morphTargets=ARKit&textureAtlas=1024");
+    toast.success("New Avatar Created!");
+
     onClose();
   };
 
