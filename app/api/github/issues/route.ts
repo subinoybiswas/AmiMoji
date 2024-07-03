@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
       owner: "subinoybiswas",
       repo: "AmiMoji",
       state: "all",
+      filter: "issues", // Specify "issues" to filter for only issues
     });
     return NextResponse.json(
       { issues },
