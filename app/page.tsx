@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
-import { Button } from "@nextui-org/react";
+import { Button, useDisclosure } from "@nextui-org/react";
+import ModelModalScreen from "@/components/Modal/ModelModalScreen";
 export default function Home() {
   const displayToggle = true;
   const [isVisible, setIsVisible] = useState(false);
@@ -19,6 +20,16 @@ export default function Home() {
   };
 
   const ImageList = ["/edit.png", "/edit.png", "/edit.png"];
+  const [url, setUrl] = useState<string>(
+    "https://models.readyplayer.me/65e5840c374014375e404085.glb?morphTargets=ARKit"
+  );
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const modalProps = {
+    isOpen,
+    onOpenChange,
+    setUrl,
+    onClose,
+  };
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-[url('/bg.svg')] bg-cover ">
       {/* {Background taken from https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/} */}
@@ -62,6 +73,23 @@ export default function Home() {
               animate={isVisible ? "open" : "closed"}
               variants={variants}
             >
+              <div className="bg-slate-600/30 w-full backdrop-blur-lg rounded-xl cursor-pointer hover:border-2 hover:border-blue-500">
+                <Image
+                  className="rounded-xl"
+                  src={"/edit.png"}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    aspectRatio: "16/9",
+                    objectFit: "cover",
+                  }}
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  alt="Image"
+                  onClick={onOpen}
+                />
+              </div>
               {ImageList.map((image, index) => {
                 return (
                   <div
@@ -86,11 +114,20 @@ export default function Home() {
                 );
               })}
             </motion.nav>
-            <Button onClick={toggleVisibility} className="top-5 m-2 fixed" isIconOnly>
+            <Button
+              onClick={toggleVisibility}
+              className="top-5 m-2 fixed"
+              isIconOnly
+            >
               <Sparkles size={16} strokeWidth={3} />
             </Button>
-            <VideoView displayToggle={displayToggle} />
+            <VideoView
+              displayToggle={displayToggle}
+              url={url}
+              setUrl={setUrl}
+            />
           </div>
+          <ModelModalScreen modalProps={modalProps}/>
         </div>
       </div>
     </main>

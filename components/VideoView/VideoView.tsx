@@ -15,21 +15,22 @@ import {
 import options from "@/app/helpers/faceLandMarks";
 import { Preload, Loader } from "@react-three/drei";
 import ModalScreen from "../Modal/ModalScreen";
-import ModelModalScreen from "../Modal/ModelModalScreen";
+
 
 export default function VideoView({
   displayToggle,
+  url,
+  setUrl
 }: {
   displayToggle: boolean;
+  url: string;
+  setUrl: (url: string) => void;
 }) {
   let video: HTMLVideoElement;
   let faceLandmarker: FaceLandmarker | null = null;
   let lastVideoTime = -1;
   const [blendshapes, setBlendshapes] = useState<Category[] | null>(null);
   const [rotation, setRotation] = useState<Euler | null>(null);
-  const [url, setUrl] = useState<string>(
-    "https://models.readyplayer.me/65e5840c374014375e404085.glb?morphTargets=ARKit"
-  );
   const avatarRef = createRef<HTMLCanvasElement>();
   const recordButtonRef = useRef(null);
   const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
