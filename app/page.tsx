@@ -35,10 +35,7 @@ export default function Home() {
     },
   ];
 
-  const [url, setUrl] = useState<string>(
-    "/default.glb"
-  );
-
+  const [url, setUrl] = useState<string>("/default.glb");
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const modalProps = {
@@ -50,6 +47,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-[url('/bg.svg')] bg-cover ">
       {/* {Background taken from https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/} */}
+      <div className="font-tiny text-4xl fixed left-0 top-0 p-5">AmiMoji</div>
       <div className="fixed h-full w-full backdrop-blur-lg">
         {/* <section className="bg-gray-900 text-white">
     <div className="mx-auto max-w-3xl text-center">
