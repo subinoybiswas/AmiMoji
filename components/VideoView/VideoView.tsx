@@ -15,12 +15,14 @@ import {
 import options from "@/app/helpers/faceLandMarks";
 import { Preload, Loader } from "@react-three/drei";
 import ModalScreen from "../Modal/ModalScreen";
-
+import { BiSolidUpArrow } from "react-icons/bi";
+import { BiSolidDownArrow } from "react-icons/bi";
+import { Controls } from "./helper/Controls";
 
 export default function VideoView({
   displayToggle,
   url,
-  setUrl
+  setUrl,
 }: {
   displayToggle: boolean;
   url: string;
@@ -33,7 +35,7 @@ export default function VideoView({
   const [rotation, setRotation] = useState<Euler | null>(null);
   const avatarRef = createRef<HTMLCanvasElement>();
   const recordButtonRef = useRef(null);
-  const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isRecording, setIsRecording] = useState(false);
   const [videoURL, setVideoURL] = useState<string>("");
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
@@ -41,12 +43,13 @@ export default function VideoView({
   const [stream, setStream] = useState<MediaStream>();
   const [newBlob, setNewBlob] = useState<Blob>();
   const [isLoading, setIsLoading] = useState(false);
+  const [position, setPosition] = useState<number[]>([0, -1.75, 3]);
   const modalProps = {
     isOpen,
     onOpenChange,
     videoURL,
     setUrl,
-    onClose
+    onClose,
   };
 
   useEffect(() => {
@@ -269,6 +272,7 @@ export default function VideoView({
               url={url}
               blendshapes={blendshapes}
               rotation={rotation}
+              position={position}
               // headMesh={headMesh}
             />
           )}
@@ -276,6 +280,8 @@ export default function VideoView({
       ) : (
         <></>
       )}
+      <Controls setPosition={setPosition} />
+
       <div className="bottom-0 fixed p-6">
         <div className="grid grid-flow-col gap-1 min-w-1/4   self-center place-items-center bg-slate-400/50 p-2 rounded-3xl ">
           <button ref={recordButtonRef} onClick={toggleRecording}>
@@ -286,6 +292,7 @@ export default function VideoView({
               isStopped={!isRecording}
             />
           </button>
+
           {/* <Button onPress={onOpen} color="secondary">
             Open Modal
           </Button> */}
