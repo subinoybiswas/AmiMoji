@@ -243,8 +243,8 @@ export default function VideoView({
             shadows
           >
             <Preload all />
-            <ambientLight intensity={0.8} />
-            <pointLight
+            <ambientLight intensity={1.4} />
+            {/* <pointLight
               position={[10, 10, 10]}
               color={new Color(1, 1, 0)}
               intensity={0.5}
@@ -255,8 +255,8 @@ export default function VideoView({
               color={new Color(1, 0, 0)}
               intensity={0.5}
               castShadow
-            />
-            <pointLight position={[0, 0, 10]} intensity={0.5} castShadow />
+            /> */}
+            {/* <pointLight position={[0, 20, 10]} intensity={0.5} castShadow /> */}
             <Suspense fallback={<Loading progress={progress} />}>
               {blendshapes && rotation && (
                 <Avatar
