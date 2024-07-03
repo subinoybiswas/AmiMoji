@@ -10,12 +10,11 @@ export default function ModelModalScreen({
   modalProps: {
     isOpen: boolean;
     onOpenChange: () => void;
-    videoURL: string;
     setUrl: (url: string) => void;
     onClose: () => void;
   };
 }) {
-  const { isOpen, onOpenChange, videoURL, setUrl, onClose } = modalProps;
+  const { isOpen, onOpenChange, setUrl, onClose } = modalProps;
   const handleOnAvatarExported = (event: AvatarExportedEvent) => {
     setUrl(event.data.url + "?morphTargets=ARKit&textureAtlas=1024");
     onClose();

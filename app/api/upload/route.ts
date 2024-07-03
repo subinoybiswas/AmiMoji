@@ -9,7 +9,7 @@ import { firebaseConfig } from "@/app/secrets/firebase";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app, "gs://amimoji-7a88b.appspot.com");
+const storage = getStorage(app, `gs://${process.env.STORAGE_BUCKET}`);
 
 export async function POST(req: Request) {
   const storageRef = ref(storage, `uploads/${generateRandomFilename(10)}`);

@@ -8,10 +8,11 @@ export interface AvatarProps {
   url: string;
   blendshapes: Category[] | undefined; // Assuming blendshapes is an array of objects
   rotation: Euler | undefined;
+  position: number[];
   // headMesh: any[] | undefined;
 }
 
-export function Avatar({ url, blendshapes, rotation }: AvatarProps) {
+export function Avatar({ url, blendshapes, rotation, position }: AvatarProps) {
   const { scene } = useGLTF(url);
   const { nodes } = useGraph(scene);
   const headMeshRef = useRef<any[]>([]);
@@ -51,5 +52,5 @@ export function Avatar({ url, blendshapes, rotation }: AvatarProps) {
     }
   });
 
-  return <primitive object={scene} position={[0, -1.75, 3]} />;
+  return <primitive object={scene} position={position} scale={[-1, 1, 1]}/>;
 }

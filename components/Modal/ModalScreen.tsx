@@ -22,10 +22,11 @@ export default function ModalScreen({
     videoURL: string;
   };
 }) {
+  
   const ffmpegRef = useRef(new FFmpeg());
   const { isOpen, onOpenChange, videoURL } = modalProps;
   const [loading, setLoading] = useState(false);
-
+  const linkRef = useRef<HTMLAnchorElement>(null);
   const handleDownload = async (mode: string) => {
     if (mode === "video") {
       try {
@@ -33,14 +34,14 @@ export default function ModalScreen({
         const response = await fetch(videoURL);
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        downloadHelper(url, "mp4");
+        downloadHelper(url, "mp4", linkRef);
       } catch (error) {
         console.error("Error downloading video:", error);
       }
     } else if (mode === "gif") {
       try {
         const url = await transcode(videoURL, ffmpegRef, setLoading);
-        downloadHelper(url, "gif");
+        downloadHelper(url, "gif", linkRef);
       } catch (error) {
         console.error("Error converting to GIF:", error);
       }
@@ -71,6 +72,7 @@ export default function ModalScreen({
             <ModalBody>
               {videoURL && videoURL.length > 0 && (
                 <>
+                  <a ref={linkRef} style={{ display: "none" }} />
                   <video autoPlay className="" src={videoURL}></video>
                   <Tabs aria-label="Options">
                     <Tab key="video" title="Video">
