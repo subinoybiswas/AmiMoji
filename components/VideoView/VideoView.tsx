@@ -6,7 +6,6 @@ import { Avatar } from "./helper/Avatar";
 import { Button, useDisclosure } from "@nextui-org/react";
 import Lottie from "react-lottie";
 import { Spinner } from "@nextui-org/spinner";
-import animationData from "@/app/static/recordingani.json";
 import {
   Category,
   FaceLandmarker,
@@ -15,9 +14,8 @@ import {
 import options from "@/app/helpers/faceLandMarks";
 import { Preload, Loader } from "@react-three/drei";
 import ModalScreen from "../Modal/ModalScreen";
-import { BiSolidUpArrow } from "react-icons/bi";
-import { BiSolidDownArrow } from "react-icons/bi";
 import { Controls } from "./helper/Controls";
+import { RecordingButton } from "../RecordingButton/RecordingButton";
 
 export default function VideoView({
   displayToggle,
@@ -34,7 +32,6 @@ export default function VideoView({
   const [blendshapes, setBlendshapes] = useState<Category[] | null>(null);
   const [rotation, setRotation] = useState<Euler | null>(null);
   const avatarRef = createRef<HTMLCanvasElement>();
-  const recordButtonRef = useRef(null);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isRecording, setIsRecording] = useState(false);
   const [videoURL, setVideoURL] = useState<string>("");
@@ -94,6 +91,7 @@ export default function VideoView({
       }
     };
   }, []);
+  
   useEffect(() => {
     if (mediaRecorder) {
       mediaRecorder.onstop = handleStop;
@@ -210,14 +208,6 @@ export default function VideoView({
       onOpen();
     }
   };
-  const defaultOptions = {
-    loop: true,
-    autoplay: false,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
 
   return (
     <div
@@ -282,23 +272,16 @@ export default function VideoView({
       )}
       <Controls setPosition={setPosition} />
 
-      <div className="bottom-0 fixed p-6">
-        <div className="grid grid-flow-col gap-1 min-w-1/4   self-center place-items-center bg-slate-400/50 p-2 rounded-3xl ">
-          <button ref={recordButtonRef} onClick={toggleRecording}>
-            <Lottie
-              options={defaultOptions}
-              height={40}
-              width={40}
-              isStopped={!isRecording}
-            />
-          </button>
+      <RecordingButton
+        isRecording={isRecording}
+        toggleRecording={toggleRecording}
+      />
 
-          {/* <Button onPress={onOpen} color="secondary">
+      {/* <Button onPress={onOpen} color="secondary">
             Open Modal
           </Button> */}
-          <ModalScreen modalProps={modalProps} />
-        </div>
-      </div>
+
+      <ModalScreen modalProps={modalProps} />
     </div>
   );
 }

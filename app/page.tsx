@@ -34,9 +34,12 @@ export default function Home() {
       url: "https://models.readyplayer.me/6684fa97a6014cc4b10c39fe.glb",
     },
   ];
+
   const [url, setUrl] = useState<string>(
     "https://models.readyplayer.me/65e5840c374014375e404085.glb?morphTargets=ARKit"
   );
+
+  
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const modalProps = {
     isOpen,
