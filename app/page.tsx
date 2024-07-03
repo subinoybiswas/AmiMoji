@@ -19,7 +19,20 @@ export default function Home() {
     closed: { opacity: 0, x: "-100%" },
   };
 
-  const ImageList = ["/edit.png", "/edit.png", "/edit.png"];
+  const ImageList = [
+    {
+      name: "/main.png",
+      url: "https://models.readyplayer.me/65e5840c374014375e404085.glb",
+    },
+    {
+      name: "/char1.png",
+      url: "https://models.readyplayer.me/6684f9a1a62e45bacf363b63.glb",
+    },
+    {
+      name: "/char2.png",
+      url: "https://models.readyplayer.me/6684fa97a6014cc4b10c39fe.glb",
+    },
+  ];
   const [url, setUrl] = useState<string>(
     "https://models.readyplayer.me/65e5840c374014375e404085.glb?morphTargets=ARKit"
   );
@@ -90,7 +103,7 @@ export default function Home() {
                   onClick={onOpen}
                 />
               </div>
-              {ImageList.map((image, index) => {
+              {ImageList.map((obj, index) => {
                 return (
                   <div
                     key={index}
@@ -98,7 +111,7 @@ export default function Home() {
                   >
                     <Image
                       className="rounded-xl"
-                      src={image}
+                      src={obj.name}
                       style={{
                         width: "100%",
                         height: "auto",
@@ -109,6 +122,7 @@ export default function Home() {
                       height={0}
                       sizes="100vw"
                       alt="Image"
+                      onClick={() => {setUrl(obj.url+"?morphTargets=ARKit")}}
                     />
                   </div>
                 );
@@ -127,7 +141,7 @@ export default function Home() {
               setUrl={setUrl}
             />
           </div>
-          <ModelModalScreen modalProps={modalProps}/>
+          <ModelModalScreen modalProps={modalProps} />
         </div>
       </div>
     </main>
