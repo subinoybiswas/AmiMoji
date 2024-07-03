@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { Button, useDisclosure } from "@nextui-org/react";
 import ModelModalScreen from "@/components/Modal/ModelModalScreen";
+import { CustomChar } from "./CustomCharBtn";
 export default function Home() {
   const displayToggle = true;
   const [isVisible, setIsVisible] = useState(false);
@@ -26,7 +27,7 @@ export default function Home() {
     },
     {
       name: "/char1.png",
-      url: "https://models.readyplayer.me/6684f9a1a62e45bacf363b63.glb",
+      url: "https://models.readyplayer.me/66850492a6014cc4b10c5a00.glb",
     },
     {
       name: "/char2.png",
@@ -87,21 +88,7 @@ export default function Home() {
               variants={variants}
             >
               <div className="bg-slate-600/30 w-full backdrop-blur-lg rounded-xl cursor-pointer hover:border-2 hover:border-blue-500">
-                <Image
-                  className="rounded-xl"
-                  src={"/edit.png"}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    aspectRatio: "16/9",
-                    objectFit: "cover",
-                  }}
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  alt="Image"
-                  onClick={onOpen}
-                />
+                <CustomChar onOpen={onOpen} />
               </div>
               {ImageList.map((obj, index) => {
                 return (
@@ -122,7 +109,9 @@ export default function Home() {
                       height={0}
                       sizes="100vw"
                       alt="Image"
-                      onClick={() => {setUrl(obj.url+"?morphTargets=ARKit")}}
+                      onClick={() => {
+                        setUrl(obj.url + "?morphTargets=ARKit");
+                      }}
                     />
                   </div>
                 );
