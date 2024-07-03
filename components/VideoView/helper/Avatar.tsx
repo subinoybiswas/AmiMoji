@@ -52,5 +52,5 @@ export function Avatar({ url, blendshapes, rotation, position }: AvatarProps) {
     }
   });
 
-  return <primitive object={scene} position={position} />;
+  return <primitive object={scene} position={position} scale={[-1, 1, 1]}/>;
 }
