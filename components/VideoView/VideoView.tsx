@@ -63,7 +63,7 @@ export default function VideoView({
 
       if (videoRef.current) {
         const video = videoRef.current;
-     
+
         navigator.mediaDevices
           .getUserMedia({
             video: { width: 1280, height: 720 },
@@ -106,12 +106,6 @@ export default function VideoView({
     }
   }, [mediaRecorder]);
 
-  useEffect(() => {
-    const blob = new Blob(recordedBlobs, { type: "video/webm" });
-    const url = window.URL.createObjectURL(blob);
-    setVideoURL(url);
-    console.log("url", url);
-  }, [newBlob]);
 
   const predict = async () => {
     let nowInMs = Date.now();
@@ -138,7 +132,7 @@ export default function VideoView({
         }
       }
     }
-    window.requestAnimationFrame(predict);
+    requestAnimationFrame(predict);
   };
 
   const handleDataAvailable = (event: any) => {

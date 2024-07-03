@@ -1,17 +1,20 @@
 import { generate } from "random-words";
-export const downloadHelper = async (url: string, filetype: string) => {
-  if (typeof window !== "undefined" && typeof document !== "undefined") {
+import { RefObject } from "react";
+export const downloadHelper = async (
+  url: string,
+  filetype: string,
+  linkRef: RefObject<HTMLAnchorElement>
+) => {
+  if (linkRef.current) {
     try {
-      const link = document.createElement("a");
+      const link = linkRef.current;
       link.href = url;
       link.download = `amimoji_${generate({
         exactly: 2,
         join: "_",
       })}.${filetype}`;
-      link.style.display = "none";
-      document.body.appendChild(link);
+
       link.click();
-      document.body.removeChild(link);
     } catch (error: any) {
       throw new Error("Error downloading video:", error);
     }
