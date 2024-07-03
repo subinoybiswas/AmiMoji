@@ -16,7 +16,7 @@ import { Preload, Loader } from "@react-three/drei";
 import ModalScreen from "../Modal/ModalScreen";
 import { Controls } from "./helper/Controls";
 import { RecordingButton } from "../RecordingButton/RecordingButton";
-import {  useProgress } from "@react-three/drei";
+import { useProgress } from "@react-three/drei";
 export default function VideoView({
   displayToggle,
   url,
