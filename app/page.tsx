@@ -23,23 +23,23 @@ export default function Home() {
   const ImageList = [
     {
       name: "/main.png",
-      url: "https://models.readyplayer.me/65e5840c374014375e404085.glb",
+      url: "/main.glb",
     },
     {
       name: "/char1.png",
-      url: "https://models.readyplayer.me/66850492a6014cc4b10c5a00.glb",
+      url: "/char1.glb",
     },
     {
       name: "/char2.png",
-      url: "https://models.readyplayer.me/6684fa97a6014cc4b10c39fe.glb",
+      url: "/char2.glb",
     },
   ];
 
   const [url, setUrl] = useState<string>(
-    "https://models.readyplayer.me/65e5840c374014375e404085.glb?morphTargets=ARKit"
+    "/default.glb"
   );
 
-  
+
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const modalProps = {
     isOpen,
