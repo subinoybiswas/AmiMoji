@@ -2,21 +2,24 @@ import { Octokit } from "@octokit/rest";
 
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-    const issues = await octokit.paginate(octokit.issues.listForRepo, {
+    
+    const host = request.headers.get("host");
+    const origin =
+      request.headers.get("origin") || request.headers.get("referer");
+
+    if (!host || !origin || !origin.includes(host)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const { data } = await octokit.request("GET /repos/{owner}/{repo}/issues", {
       owner: "subinoybiswas",
       repo: "AmiMoji",
-      state: "all",
-      filter: "issues", // Specify "issues" to filter for only issues
     });
-    return NextResponse.json(
-      { issues },
-      {
-        status: 200,
-      }
-    );
+    const issues = data;
+    return NextResponse.json({ issues });
   } catch (e) {
     console.error(e);
     return NextResponse.json(

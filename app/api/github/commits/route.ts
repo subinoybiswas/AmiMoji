@@ -1,8 +1,15 @@
 import { Octokit } from "@octokit/rest";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
+    const host = request.headers.get("host");
+    const origin =
+      request.headers.get("origin") || request.headers.get("referer");
+
+    if (!host || !origin || !origin.includes(host)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
     const commits = await octokit.paginate(octokit.repos.listCommits, {
       owner: "subinoybiswas",
@@ -18,7 +25,9 @@ export async function GET(request: NextRequest) {
     console.error(e);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }
