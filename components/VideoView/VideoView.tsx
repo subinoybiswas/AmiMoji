@@ -2,9 +2,9 @@
 import React, { useEffect, useRef, useState, createRef, Suspense } from "react";
 import { Color, Euler, Matrix4 } from "three";
 import { Canvas } from "@react-three/fiber";
-import { Avatar } from "./helper/Avatar";
+import { Avatar } from "./Avatar/Avatar";
 import { Button, useDisclosure } from "@nextui-org/react";
-import { Loading } from "./helper/Loading";
+import { Loading } from "./Loading/Loading";
 import { Spinner } from "@nextui-org/spinner";
 import {
   Category,
@@ -14,7 +14,7 @@ import {
 import options from "@/app/helpers/faceLandMarks";
 import { Preload, Loader } from "@react-three/drei";
 import ModalScreen from "../Modal/ModalScreen";
-import { Controls } from "./helper/Controls";
+import { Controls } from "./Controls/Controls";
 import { RecordingButton } from "../RecordingButton/RecordingButton";
 import { useProgress } from "@react-three/drei";
 import toast from "react-hot-toast";
@@ -27,22 +27,22 @@ export default function VideoView({
   url: string;
   setUrl: (url: string) => void;
 }) {
-  let video: HTMLVideoElement;
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   let faceLandmarker: FaceLandmarker | null = null;
   let lastVideoTime = -1;
   const [blendshapes, setBlendshapes] = useState<Category[] | null>(null);
   const [rotation, setRotation] = useState<Euler | null>(null);
   const avatarRef = createRef<HTMLCanvasElement>();
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [isRecording, setIsRecording] = useState(false);
   const [videoURL, setVideoURL] = useState<string>("");
   const [recordedBlobs, setRecordedBlobs] = useState<Blob[]>([]);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [stream, setStream] = useState<MediaStream>();
-  const [newBlob, setNewBlob] = useState<Blob>();
   const [isLoading, setIsLoading] = useState(false);
   const [position, setPosition] = useState<number[]>([0, -1.75, 3]);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { progress } = useProgress();
+
   const modalProps = {
     isOpen,
     onOpenChange,
@@ -85,6 +85,7 @@ export default function VideoView({
     setup();
 
     const canvas = avatarRef.current;
+
     // Capture stream from canvas
     const canvasStream = canvas?.captureStream();
     setStream(canvasStream);
@@ -154,7 +155,7 @@ export default function VideoView({
     }
     setIsRecording(!isRecording);
   };
-  const { progress } = useProgress();
+
   const startRecording = () => {
     let options = { mimeType: "video/webm", videoBitsPerSecond: 5000000 };
     setRecordedBlobs([]);
@@ -169,19 +170,19 @@ export default function VideoView({
     } catch (e0) {
       console.log("Unable to create MediaRecorder with options Object: ", e0);
     }
-    console.log(
-      "Created MediaRecorder",
-      mediaRecorder,
-      "with options",
-      options
-    );
+    // console.log(
+    //   "Created MediaRecorder",
+    //   mediaRecorder,
+    //   "with options",
+    //   options
+    // );
     if (mediaRecorder === undefined) {
       return;
     }
     mediaRecorder.onstop = handleStop;
     mediaRecorder.ondataavailable = handleDataAvailable;
     mediaRecorder.start(100); // collect 100ms of data
-    console.log("MediaRecorder started", mediaRecorder);
+    // console.log("MediaRecorder started", mediaRecorder);
   };
 
   const stopRecording = async () => {
@@ -190,20 +191,24 @@ export default function VideoView({
       return;
     }
     mediaRecorder.stop();
-    console.log("Recorded Blobs: ", recordedBlobs);
+
+    // console.log("Recorded Blobs: ", recordedBlobs);
     const blob = new Blob(recordedBlobs, { type: "video/webm" });
-    setNewBlob(blob);
 
     const formData = new FormData();
     formData.append("file", blob, "video.webm");
+
     setIsLoading(true);
+
     const resp = await fetch("/api/upload", {
       method: "POST",
       body: formData,
     });
 
     const data = await resp.json();
-    console.log("data", data, resp.status);
+
+    // console.log("data", data, resp.status);
+
     if (resp.status === 200) {
       setVideoURL(data.url);
       setIsLoading(false);

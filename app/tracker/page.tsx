@@ -1,4 +1,4 @@
-import Tracker from "@/components/component/tracker";
+import Tracker from "@/components/Tracker/tracker";
 
 export default function Page() {
   return <Tracker />;
