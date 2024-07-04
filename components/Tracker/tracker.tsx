@@ -29,7 +29,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Issue, Commits } from "@/components/component/types";
+import { Issue, Commits } from "@/components/Tracker/types";
 import { GithubIcon, PlusIcon, GitCommitVerticalIcon } from "./icons";
 const getIssues = async () => {
   const response = await fetch(`/api/github/issues`, {

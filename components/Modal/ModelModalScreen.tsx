@@ -15,13 +15,16 @@ export default function ModelModalScreen({
     setUrl: (url: string) => void;
     onClose: () => void;
     toast: (message: string) => void;
+    toggleVisibility: () => void;
   };
 }) {
-  const { isOpen, onOpenChange, setUrl, onClose } = modalProps;
-  const handleOnAvatarExported = (event: AvatarExportedEvent) => {
+  const { isOpen, onOpenChange, setUrl, onClose, toggleVisibility } =
+    modalProps;
+  
+    const handleOnAvatarExported = (event: AvatarExportedEvent) => {
     setUrl(event.data.url + "?morphTargets=ARKit&textureAtlas=1024");
     toast.success("New Avatar Created!");
-
+    toggleVisibility();
     onClose();
   };
 
