@@ -53,27 +53,33 @@ export default function VideoView({
   };
 
   useEffect(() => {
+    toast.loading("Loading Model", { duration: 3000 });
     const setup = async () => {
-      const filesetResolver = await FilesetResolver.forVisionTasks(
-        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
-      );
+      try {
+        const filesetResolver = await FilesetResolver.forVisionTasks(
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
+        );
 
-      faceLandmarker = await FaceLandmarker.createFromOptions(
-        filesetResolver,
-        options
-      );
+        faceLandmarker = await FaceLandmarker.createFromOptions(
+          filesetResolver,
+          options
+        );
 
-      if (videoRef.current) {
-        const video = videoRef.current;
+        if (videoRef.current) {
+          const video = videoRef.current;
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 1280, height: 720 },
-        });
-        video.srcObject = stream;
-        video.addEventListener("loadeddata", predict);
-        video.style.transform = "scaleX(-1)";
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: 1280, height: 720 },
+          });
+          video.srcObject = stream;
+          video.addEventListener("loadeddata", predict);
+          video.style.transform = "scaleX(-1)";
+        }
+      } catch (e) {
+        toast.error("Error Loading Camera. Please refresh the page.");
       }
     };
+
     setup();
 
     const canvas = avatarRef.current;
