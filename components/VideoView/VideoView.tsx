@@ -238,8 +238,8 @@ export default function VideoView({
             style={{
               // aspectRatio: 16 / 9,
 
-              height: "400px",
-              width: "400px",
+              maxHeight: "400px",
+              maxWidth: "400px",
             }}
             camera={{ fov: 14 }}
             shadows

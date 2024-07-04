@@ -51,6 +51,7 @@ export default function Home() {
     setUrl,
     onClose,
     toast,
+    toggleVisibility,
   };
   return (
     <NextUIProvider>
@@ -63,9 +64,9 @@ export default function Home() {
           <div className="fixed h-full w-full backdrop-blur-lg">
             {displayToggle ? (
               <div className="flex flex-col items-center justify-between  min-h-screen">
-                <div className="fixed bg-slate-600/30 w-3/4 backdrop-blur-lg h-3/4 rounded-xl p-5 items-center">
+                <div className="fixed bg-slate-600/30 md:w-3/4 w-full backdrop-blur-lg h-3/4 rounded-xl p-5 items-center">
                   <motion.nav
-                    className=" fixed flex flex-col bg-slate-600/30 w-1/4 scrolltarget backdrop-blur-lg h-[90%] rounded-xl p-3 gap-2 overflow-y-scroll"
+                    className=" fixed flex flex-col bg-slate-600/30 md:w-1/4 w-[90%] scrolltarget backdrop-blur-lg h-[90%] rounded-xl p-3 gap-2 overflow-y-scroll z-[40]"
                     animate={isVisible ? "open" : "closed"}
                     variants={variants}
                   >
@@ -101,7 +102,7 @@ export default function Home() {
                   </motion.nav>
                   <Button
                     onClick={toggleVisibility}
-                    className="top-5 m-2 fixed"
+                    className="top-5 m-2 fixed z-[40]"
                     isIconOnly
                   >
                     <Sparkles size={16} strokeWidth={3} />
@@ -131,7 +132,7 @@ export default function Home() {
 
                   <div className="mt-8 flex flex-wrap justify-center gap-4">
                     <Button
-                      className="block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
+                      className="flex items-center content-center  rounded border border-blue-600 bg-blue-600 px-12 py-4 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
                       onClick={() => setDisplayToggle(true)}
                     >
                       Get Started
