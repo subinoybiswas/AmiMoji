@@ -66,20 +66,12 @@ export default function VideoView({
       if (videoRef.current) {
         const video = videoRef.current;
 
-        navigator.mediaDevices
-          .getUserMedia({
-            video: { width: 1280, height: 720 },
-            audio: false,
-          })
-          .then((stream) => {
-            stream.addEventListener("loadeddata", () => {
-              console.log("loadeddata");
-            });
-
-            video.srcObject = stream;
-            video.addEventListener("loadeddata", predict);
-            video.style.transform = "scaleX(-1)";
-          });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 1280, height: 720 },
+        });
+        video.srcObject = stream;
+        video.addEventListener("loadeddata", predict);
+        video.style.transform = "scaleX(-1)";
       }
     };
     setup();
@@ -105,7 +97,7 @@ export default function VideoView({
       mediaRecorder.onstop = handleStop;
       mediaRecorder.ondataavailable = handleDataAvailable;
       mediaRecorder.start(100); // collect 100ms of data
-      console.log("MediaRecorder started", mediaRecorder);
+      // console.log("MediaRecorder started", mediaRecorder);
     }
   }, [mediaRecorder]);
 
@@ -144,7 +136,7 @@ export default function VideoView({
   };
 
   const handleStop = (event: any) => {
-    console.log("Recorder stopped: ", event);
+    // console.log("Recorder stopped: ", event);
   };
 
   const toggleRecording = () => {
@@ -168,6 +160,7 @@ export default function VideoView({
       setMediaRecorder(recorder);
       // setIsStopped(false);
     } catch (e0) {
+      toast("Oops! Something went wrong. Please try again.");
       console.log("Unable to create MediaRecorder with options Object: ", e0);
     }
     // console.log(
@@ -187,7 +180,8 @@ export default function VideoView({
 
   const stopRecording = async () => {
     if (mediaRecorder === undefined) {
-      console.log("MediaRecorder is undefined");
+      // console.log("MediaRecorder is undefined");
+      toast("Oops! Something went wrong. Please try again.");
       return;
     }
     mediaRecorder.stop();
