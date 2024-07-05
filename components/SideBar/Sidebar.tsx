@@ -1,4 +1,4 @@
-import { CustomChar } from "@/app/CustomCharBtn";
+import { CustomChar } from "@/components/CustomCharecterBtn/CustomCharBtn";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { ImageList } from "./ImageList";
